@@ -2,6 +2,7 @@ package ch.becompany.timesheet
 
 import java.io.{File, PrintWriter}
 import java.nio.file.Paths
+import java.time.format.DateTimeFormatter
 import java.time.{Duration, LocalDate, LocalTime}
 import java.util.concurrent.Executors
 
@@ -48,10 +49,12 @@ object Main extends IOApp {
   object Project extends StringEnum[Project] {
 
     case object Produktentwicklungen extends Project("Produktentwicklungen", "8-20160-1007")
-    case object Aoe extends Project("Archivöffnung", "4-20192-0001")
+    case object Aoe extends Project("AOE", "4-20192-0001")
+    case object AoeSonstiges extends Project("AOE sonstiges", "4-20192-0001")
     case object Betrieb extends Project("Betrieb", "8-20163-0010")
     case object VideoWorkflow extends Project("Video Workflow", "8-20160-1008")
     case object Tms extends Project("TMS", "8-20160-1009")
+    case object CloudReadiness extends Project("Cloud Readiness", "8-20160-1017")
 
     override def values: IndexedSeq[Project] = findValues
 
@@ -82,7 +85,7 @@ object Main extends IOApp {
             .map { case ((date, project), chunk) =>
               val t = chunk.foldMap(e => durationToDouble(e.duration))
               List(
-                date,
+                date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
                 project.number,
                 project.value,
                 "%.2f".format(t),
